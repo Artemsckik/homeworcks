@@ -65,13 +65,3 @@ print('5: ', q1 == q2)
 
 print(q1 is q2)
 
-# 6
-
-z = int(3)
-
-x = float(3)
-
-
-
-print('6: ', z is x)
-print(z == x)
