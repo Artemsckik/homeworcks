@@ -19,6 +19,6 @@ def cheaker():
             print(user[::-1])
         else: print('Число не чётное но вот оно в обратной последовательности', user[::-1])
     except:
-        print(str.upper(user[::-1]))
+        print(user[::-1].upper())
 cheaker()
 
