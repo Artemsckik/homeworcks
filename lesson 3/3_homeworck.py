@@ -26,3 +26,4 @@ print(file=file_sourse)
 print('',f' Ваше имя - {name}, Ваша фамилия - {surname} ', end='! >>>>', sep='<<<< ? ', file=file_sourse)
 
 file_sourse.close()
+
