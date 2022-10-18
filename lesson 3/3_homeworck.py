@@ -8,9 +8,9 @@
 # разными способами форматирования через разделитель "<<<>>>", вывод сделать в файл.
 
 
-file_sourse =open('file.txt', 'w')
+file_sourse = open('file.txt', 'w')
 
-user_name= input('Введите имя и фамилию ')
+user_name = input('Введите имя и фамилию ')
 
 list_name_surname = user_name.split()
 
