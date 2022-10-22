@@ -2,28 +2,32 @@
 
 import random
 
-answer = ('YES', 'ДА', "Y", 'Д')
 
+def game_choose():
 
+    user_try = 3
 
-def game_random(user_try=3, end_game=0):
-    while user_try != end_game:
-        user = input(f'Угадай число от 1 до 3, количество попыток {user_try} : ')
+    score = 0
 
-        if user.isdigit() is False or 0 > int(user) > 4:
+    while user_try != 0:
+        user = input(f'угадайте число от 1 до 3, ваше число попыток {user_try}, ваши очки {score} ')
+        game_random = random.randint(1, 3)
+        if not user.isdigit():
+            print('Только числа')
+            continue
+        elif int(user) < 1 or int(user) > 3:
             print('Только числа от 1 до 3')
-
-        elif int(user) == random.randint(0, 3):
+            continue
+        elif user_try == game_random:
             print('Вы угадали')
-            choose = input('хотите начать закончить? (Y/Д): ')
-            if choose.upper() == answer:
-                break
-            else:
-                pass
-
-        elif int(user) != random.randint(0, 3):
+            print(f'Число {game_random}')
+            user_try = user_try - 1
+            score = score + 1
+        elif user_try != game_random:
             print('Не угадали')
-            user_try = int(user_try - 1)
+            user_try = user_try - 1
+            print(f'Число {game_random}')
 
 
-game_random()
+
+game_choose()
