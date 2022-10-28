@@ -3,9 +3,8 @@
 
 numbers = {'Один': 1, 'Два': 2, 'Три': 3}
 
-letter = [[numbers[a], [a]] for a in numbers]
+letter = {numbers[x]: x for x in numbers}
 
-letter = dict(letter)
 
 print(letter)
 print(numbers)
