@@ -24,7 +24,7 @@ def count(amount=0):
             b.remove(element)
             amount = amount + 1
 
-    print(f'Ваш элемент {element}, количество элементов в списке {amount} ')
+    print(f'Ваш элемент {element}, количество элемента в списке {amount} ')
 
 
 count()
