@@ -8,9 +8,9 @@ def even():
             continue
         else:
             user = [int(user)]
-        resault = filter(lambda x: x % 2 != 0, user)
-        resault = list(resault)
-        if len(resault) == 0:
+        result = filter(lambda x: x % 2 != 0, user)
+        result = list(result)
+        if len(result) == 0:
             print(f'Ваше число {user} чётное!')
         else:
             print(f'Ваше число {user} не чётное!')
