@@ -15,7 +15,7 @@ def even():
         else:
             print(f'Ваше число {user} не чётное!')
 
-        end = input('хотите выйти? y/yes: ')
+        end = input('хотите выйти? yes: ')
         if end.upper() == 'YES':
             break
         else:
