@@ -3,18 +3,20 @@ def even():
         user = input('Введите число ')
         if not user.isdigit():
             continue
-        else: user = [int(user)]
+        else:
+            user = [int(user)]
         resault = filter(lambda x: x % 2 != 0, user)
         resault = list(resault)
         if len(resault) == 0:
             print(f'Ваше число {user} чётное!')
-        else: print(f'Ваше число {user} не чётное!')
+        else:
+            print(f'Ваше число {user} не чётное!')
 
         end = input('хотите выйти? y/yes: ')
         if end.upper() == 'YES':
             break
-        else: continue
-
+        else:
+            continue
 
 
 even()
