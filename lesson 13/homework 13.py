@@ -45,18 +45,18 @@ while True:
         sings = []
         sing2 = []
 
-        def filters():  # Фильтр чисел и знаков
-            q = 0
-            while q != n:
-                if v[q].isnumeric():
-                    number.append(v[q])
-                    q += 1
-                else:
-                    sings.append(v[q])
-                    sing2.append(v[q])
-                    q += 1
 
-        filters()
+        q = 0
+        while q != n:
+            if v[q].isnumeric():
+                number.append(v[q])
+                q += 1
+            else:
+                sings.append(v[q])
+                sing2.append(v[q])
+                q += 1
+
+
         counts = []
 
         def count():  # Подсчёт элементов в списке
@@ -84,15 +84,15 @@ while True:
                 print(f'{user} → Вы ввели не корректное число: {user}')
             elif user[1] == ',':
                 user2 = user.split(sep=',')
-                print('{} → Вы ввели отрицательное дробное число: {}'.format(user, user2[0] + '0.' + user2[1]))
+                print(f'{user} → Вы ввели отрицательное дробное число: {user2[0] + "0." + user2[1]}')
             elif user[1] == '.':
                 user2 = user.split(sep='.')
-                print('{} → Вы ввели отрицательное дробное число: {}'.format(user, user2[0] + '0.' + user2[1]))
+                print(f'{user} → Вы ввели отрицательное дробное число: {user2[0] + "0." + user2[1]}')
             elif '.' in user:
                 print(f'{user} → Вы ввели отрицательное дробное число: {user}')
             elif ',' in user:
                 user2 = user.split(sep=',')
-                print('{} → Вы ввели отрицательное дробное число: {}'.format(user, user2[0] + '.' + user2[1]))
+                print(f'{user} → Вы ввели отрицательное дробное число: {user2[0] + "." + user2[1]}')
             elif len(sings) == 1:
                 print(f'{user} → Вы ввели отрицательное целое число: {user}')
             else:
