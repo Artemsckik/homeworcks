@@ -60,7 +60,7 @@ while True:
         counts = []
 
         def count():  # Подсчёт элементов в списке
-            q = 0
+            h = 0
             sing = ''
             if '.' in user:
                 sing = '.'
