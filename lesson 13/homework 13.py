@@ -66,16 +66,15 @@ while True:
                 sing = '.'
             elif ',' in user:
                 sing = ','
-            q += 1
+            h += 1
             while True:
                 if not sing in sings:
                     break
 
                 else:
                     sings.remove(sing)
-                    q += 1
-
-            counts.append(q)
+                    h += 1
+            counts.append(h)
         if len(number) == 0:
             print(f'{user} → Вы ввели не корректное число: {user}')
         elif user[0] == '-':  # Блок отрицательных чисел
