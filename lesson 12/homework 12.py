@@ -10,19 +10,24 @@ from datetime import datetime
 
 
 def decorator(func):
-    start = datetime.now()
-    func()
-    finish = datetime.now()
-    print(finish - start)
+    def time():
+        start = datetime.now()
+        func()
+        finish = datetime.now()
+        print(finish - start)
+    return time
 
 
 @decorator
 def user():
     print('1')
-    number = int(input('Введите число: '))
+    input('Введите число: ')
 
 
 @decorator
 def user2():
     print('2')
     input()
+
+user()
+user2()
