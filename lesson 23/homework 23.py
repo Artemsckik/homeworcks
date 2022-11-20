@@ -50,7 +50,7 @@ class Circle(Point):
         radius = self.radius + other.radius
         return Circle(radius, x, y)
 
-    def getdiff(self, other):
+    def getdiff(self, other):  # ----------- сам метод -----------
         if self.radius == other.radius:
             print(f'x:{self.x}, y;{self.y}')
         else:
