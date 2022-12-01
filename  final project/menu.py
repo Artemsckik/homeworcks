@@ -14,6 +14,7 @@ from datetime import datetime
 import openpyxl
 import csv
 import json
+from openpyxl import load_workbook
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -173,9 +174,10 @@ class Ui_MainWindow():
 
     def clear(self):
         self.result.clear()
-
+        self.name.clear()
+        self.add2.clear()
     def add(self, info, file_path):
-        if '.csv' in file_path:
+        if '.csv' in file_path:                                                            # csv файлы добавления
             info = info.split()
             if len(info) == 6:
                 info = [f'{info[0]} {info[1]} {info[2]}', f'{info[3]}', f'{info[4]}', f'{info[5]}']
@@ -186,57 +188,60 @@ class Ui_MainWindow():
             elif len(info) > 6:
                 self.result.setText('     \n \n \n \n     Ошибка, слишком много элементов')
             else:
-                self.result.setText('     \n \n \n \n     Ошибка, слишком мало элементов')
-        elif '.txt' in file_path:
+                self.result.setText('     \n \n \n \n     Ошибка, слишком мало элементов')       #--------------
+        elif '.txt' in file_path:                                                          # txt файлы добавления
             with open(fr'{file_path}', 'a') as sourses:
                 sourse = sourses
                 info = info.split()
                 if len(info) == 6:
-                    info = f"'{info[0]} {info[1]} {info[2]}','{info[3]}','{info[4]}','{info[5]}'"
+                    info = f"\n'{info[0]} {info[1]} {info[2]}','{info[3]}','{info[4]}','{info[5]}'"
                     sourse.write(info)
-                    self.result.setText(f'   {info}')
+                    self.result.setText(f'   Был добавлен файл:\n  {info}')
                 elif len(info) > 6:
                     self.result.setText('     \n \n \n \n     Ошибка, слишком много элементов')
-                else: self.result.setText('     \n \n \n \n     Ошибка, не достаточно элементов')
-        elif '.json' in file_path:
-            info = info.split()
-            if len(info) == 6:
+                else: self.result.setText('     \n \n \n \n     Ошибка, не достаточно элементов') #--------------
+        elif '.json' in file_path:      # json файлы добавления
+            info = info.split(',')
+            if len(info) == 4:
                 q = 0
                 with open(f'{file_path}', 'r') as source:
                     sources = json.load(source)
                     if len(sources) > q:
                         q = len(sources) + 1
-                    info = {q: [f'{info[0]} {info[1]} {info[2]}', f'{info[3]}', f'{info[4]}', f'{info[5]}']}
+                    info = {q:[f'{info[0]}', f'{info[1]}', f'{info[2]}', f'{info[3]}']}
                     sources.update(info)
                 i = sources
 
                 with open(fr'{file_path}', 'w') as source:
                     json.dump(i, source)
-            elif len(info) > 6: self.result.setText('     \n \n \n \n     Ошибка, слишком много значений')
-            else: self.result.setText('     \n \n \n \n     Ошибка, слишком мало значений')
-        elif 'xlsx' in file_path:
-            book = openpyxl.open(fr'{file_path}')
-            sheet = book.active
-            info = info.split()
-            if len(info) == 5:
-                info = [f'{info[0]} {info[1]} {info[2]}', f'{info[3]}', f'{info[4]}']
-                row = sheet.max_row + 1
-                name = sheet[row][0].value = info[0]
-                birth_day = sheet[row][1].value = info[1]
-                death_day = sheet[row][2].value = info[2]
-                self.result.setText(self.result.text() + f'  {name} \n  {birth_day}\n  {death_day}\n')
+                self.result.setText(self.result.text() + f'  \n  Данные добавлены в файл:'
+                                                         f'  \n  {info}')
+            elif len(info) > 4: self.result.setText('     \n \n \n \n     Ошибка, слишком много значений')
+            else: self.result.setText('     \n \n \n \n     Ошибка, слишком мало значений')       #--------------
+        elif 'xlsx' in file_path:            # xlsx файлы добавления
+            wb = load_workbook(file_path)
+            ws = wb['Sheet1']
+            info = info.split(',')
+            print(info)
+            if len(info) == 4:
+                ws.append([f'{info[0]}', f'{info[1]}', f'{info[2]}', f'{info[3]}'])
+                wb.save(file_path)
+                wb.close()
+                self.result.setText(f'   Был добавлен данные:\n  {info}')
+
 
             elif len(info) > 6:
-                print('Много')
+                print('dwadaw')
             else:
-                print('мало')
+                print('ad')  #
+
         else:
             self.result.setText('     \n \n \n \n     Ошибка, только файлы формата txt, csv или xlsx')
 
 
     def search(self, info, file_path):
         try:
-            if '.csv' in file_path:
+            if '.csv' in file_path:                        # csv search
                 try:
                     with open(fr'{file_path}', encoding='utf-8') as source:
                         reader = csv.reader(source)
@@ -261,13 +266,13 @@ class Ui_MainWindow():
 
 
                 except FileNotFoundError:
-                    self.result.setText('     \n         Ошибка: такого файла не существует')
-            elif '.json' in file_path:
+                    self.result.setText('     \n         Ошибка: такого файла не существует') #--------------
+            elif '.json' in file_path:                                                        # csv search
                 try:
-                    with open(f'{file_path}','r',encoding='utf-8') as source:
+                    with open(f'{file_path}', 'r') as source:
                         sources = json.load(source)
                         for i in sources.values():
-                            if info in i:
+                            if info in i[0]:
                                 if len(i[2]) > 1:
                                     birth_day = i[1]
                                     death_day = i[2]
@@ -276,7 +281,9 @@ class Ui_MainWindow():
                                     death_year = death_day[2]
                                     birth_year = birth_day[2]
                                     age = int(death_year) - int(birth_year)
-                                    self.result.setText(self.result.text() + f'    \n {i, age}')
+                                    self.result.setText(self.result.text() + f'  ФИО Пол Дата родения Дата смерти:'
+                                                                             f'  \n {i}'
+                                                                             f' \n  Полные года: {age}')
                                 else:
                                     birth_day = i[1]
                                     data = datetime.now()
@@ -284,55 +291,70 @@ class Ui_MainWindow():
                                     birth_day = birth_day.split('.')
                                     birth_year = birth_day[2]
                                     age = data - int(birth_year)
-                                    self.result.setText(self.result.text() + f'    \n {i, age}')
-
+                                    self.result.setText(self.result.text() + f'  ФИО Пол Дата родения Дата смерти:'
+                                                                             f'  \n {i}'
+                                                                             f' \n  Полные года: {age}')
 
                 except FileNotFoundError:
-                    self.result.setText('     \n          Ошибка: такого файла не существует')
-            elif '.txt' in file_path:
+                    self.result.setText('     \n          Ошибка: такого файла не существует') #--------------
+            elif '.txt' in file_path:  # txt searcher
+                d = False
                 with open(f'{file_path}', 'r') as file_sourse:
                     base = list(file_sourse)
                     for i in base:
                         if info in i:
+                            d = True
                             a = i
                             a = a.split("'")
-                            birth_day = a[3]
-                            death_day = a[5]
+                            birth_day = a[5]
+                            death_day = a[7]
                             if len(death_day) > 1:
-
                                 birth_year = birth_day.split('.')
                                 birth_year = birth_year[2]
                                 death_year = death_day.split('.')
                                 death_year = death_year[2]
                                 age = int(death_year) - int(birth_year)
-                                self.result.setText(self.result.text() + f'    \n {i, age}')
+                                self.result.setText(self.result.text() + f'\n  ФИО Пол Дата родения Дата смерти: '
+                                                                         f'\n  {i} \n  Полные года: {age}')
                             else:
                                 data = datetime.now()
                                 data = data.year
                                 birth_year = birth_day.split('.')
                                 birth_year = birth_year[2]
                                 age = data - int(birth_year)
-                                self.result.setText(self.result.text() + f'    \n {i, age}')
-            elif '.xlsx' in file_path:
-                book = openpyxl.open(f'{file_path}', read_only=True)
+                                self.result.setText(self.result.text() + f'\n  ФИО Пол Дата родения Дата смерти: '
+                                                                         f'\n  {i} \n  Полные года: {age}')#--------------
+                if d is False:
+                    self.result.setText(f'     \n          пользователь {info} не был найден')
+            elif '.xlsx' in file_path:                                                      # .xlsx
+                book = openpyxl.open(fr'{file_path}')
                 sheet = book.active
-                for row in range(1, sheet.max_row):
+                for row in range(1, sheet.max_row + 1):
                     FIO = sheet[row][0].value
                     Birth_day = sheet[row][1].value
-                    death = sheet[row][2].value
+                    death_day = sheet[row][2].value
                     sex = sheet[row][3].value
                     if info in FIO:
                         date = datetime.now()
-                        if type(death) == datetime:
-                            age = death.year - Birth_day.year
-                            self.result.setText(self.result.text() + f'  {FIO} \n  {Birth_day}\n  {death}\n  {sex}\n  '
-                                                                     f'{age}\n')
+                        if len(death_day) > 1:
+                            B = Birth_day.split('.')
+                            B = B[2]
+                            D = death_day.split('.')
+                            D = D[2]
+
+                            age = int(D) - int(B)
+                            self.result.setText(self.result.text() + f'  \n  ФИО Дата родения Дата смерти Пол:'
+                                                                     f'  \n  {FIO} {Birth_day} ,{death_day}, {sex}'
+                                                                     f'  \n  Полные года: {age}')
                         else:
-                            age = date.year - Birth_day.year
-                            self.result.setText(self.result.text() + f'  {FIO}\n  {Birth_day}\n  {death}\n  {sex}\n  '
-                                                                     f'{age}\n')
+                            B = Birth_day.split('.')
+                            B = B[2]
+                            age = date.year - int(B)
+                            self.result.setText(self.result.text() + f'  \n  ФИО Дата родения Дата смерти Пол:'
+                                                                     f'  \n  {FIO} {Birth_day} ,{death_day}, {sex}'
+                                                                     f'  \n  Полные года: {age}')
             else:
-                self.result.setText('     \n     Ошибка, только файлы формата txt, csv или xlsx')
+                self.result.setText('     \n     Ошибка, только файлы формата txt, csv или xlsx')#--------------
         except Exception: self.result.setText('     \n    Ошибка')
 
 
