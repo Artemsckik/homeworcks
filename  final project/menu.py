@@ -243,116 +243,166 @@ class Ui_MainWindow():
         try:
             if '.csv' in file_path:                        # csv search
                 try:
+                    V = False
                     with open(fr'{file_path}', encoding='utf-8') as source:
                         reader = csv.reader(source)
-                        for row in reader:
-                            if info in row:
-                                birth_day = row[2]
-                                death_day = row[3]
-                                if len(row[3]) > 1:
-                                    birth_day = birth_day.split('.')
-                                    death_day = death_day.split('.')
-                                    death_year = death_day[2]
-                                    birth_year = birth_day[2]
-                                    age = int(death_year) - int(birth_year)
-                                    self.result.setText(self.result.text() + f'    \n {*row, age}')
-                                else:
-                                    data = datetime.now()
-                                    data = data.year
-                                    birth_day = birth_day.split('.')
-                                    birth_year = birth_day[2]
-                                    age = data - int(birth_year)
-                                    self.result.setText(self.result.text() + f'    \n {*row, age}')
+
+                        if info == 'all':
+                            for row in reader:
+                                V = True
+                                self.result.setText(self.result.text() + f'  \n  ФИО Пол Дата родения Дата смерти:'
+                                                                         f'  \n {row}')
+                        else:
+                            for row in reader:
+                                if info in row:
+                                    V = True
+                                    birth_day = row[2]
+                                    death_day = row[3]
+                                    if len(row[3]) > 1:
+                                        birth_day = birth_day.split('.')
+                                        death_day = death_day.split('.')
+                                        death_year = death_day[2]
+                                        birth_year = birth_day[2]
+                                        age = int(death_year) - int(birth_year)
+                                        self.result.setText(self.result.text() + f'    \n {*row, age}')
+                                    else:
+                                        data = datetime.now()
+                                        data = data.year
+                                        birth_day = birth_day.split('.')
+                                        birth_year = birth_day[2]
+                                        age = data - int(birth_year)
+                                        self.result.setText(self.result.text() + f'    \n {*row, age}')
+                    if V is False:
+                        self.result.setText(f'     \n          пользователь {info} не был найден')
 
 
                 except FileNotFoundError:
-                    self.result.setText('     \n         Ошибка: такого файла не существует') #--------------
+                    self.result.setText(f'     \n         Ошибка: файл {file_path} не найден') #--------------
             elif '.json' in file_path:                                                        # csv search
                 try:
                     with open(f'{file_path}', 'r') as source:
                         sources = json.load(source)
-                        for i in sources.values():
-                            if info in i[0]:
-                                if len(i[2]) > 1:
-                                    birth_day = i[1]
-                                    death_day = i[2]
-                                    birth_day = birth_day.split('.')
-                                    death_day = death_day.split('.')
-                                    death_year = death_day[2]
-                                    birth_year = birth_day[2]
-                                    age = int(death_year) - int(birth_year)
-                                    self.result.setText(self.result.text() + f'  ФИО Пол Дата родения Дата смерти:'
-                                                                             f'  \n {i}'
-                                                                             f' \n  Полные года: {age}')
-                                else:
-                                    birth_day = i[1]
-                                    data = datetime.now()
-                                    data = data.year
-                                    birth_day = birth_day.split('.')
-                                    birth_year = birth_day[2]
-                                    age = data - int(birth_year)
-                                    self.result.setText(self.result.text() + f'  ФИО Пол Дата родения Дата смерти:'
-                                                                             f'  \n {i}'
-                                                                             f' \n  Полные года: {age}')
+                        V = False
+                        if info == 'all':
+                            V = True
+                            for i in sources.values():
+                                self.result.setText(self.result.text() + f'  \n  ФИО Пол Дата родения Дата смерти:'
+                                                                         f'  \n {i}')
+                        else:
+                            for i in sources.values():
+                                if info in i[0]:
+                                    V = True
+                                    if len(i[2]) > 1:
+                                        birth_day = i[1]
+                                        death_day = i[2]
+                                        birth_day = birth_day.split('.')
+                                        death_day = death_day.split('.')
+                                        death_year = death_day[2]
+                                        birth_year = birth_day[2]
+                                        age = int(death_year) - int(birth_year)
+                                        self.result.setText(self.result.text() + f'  ФИО Пол Дата родения Дата смерти:'
+                                                                                 f'  \n {i}'
+                                                                                 f' \n  Полные года: {age}')
+                                    else:
+                                        birth_day = i[1]
+                                        data = datetime.now()
+                                        data = data.year
+                                        birth_day = birth_day.split('.')
+                                        birth_year = birth_day[2]
+                                        age = data - int(birth_year)
+                                        self.result.setText(self.result.text() + f'  ФИО Пол Дата родения Дата смерти:'
+                                                                                 f'  \n {i}'
+                                                                                 f' \n  Полные года: {age}')
+                    if V is False:
+                        self.result.setText(f'     \n          пользователь {info} не был найден')
 
                 except FileNotFoundError:
-                    self.result.setText('     \n          Ошибка: такого файла не существует') #--------------
+                    self.result.setText(f'     \n         Ошибка: файл {file_path} не найден') #--------------
             elif '.txt' in file_path:  # txt searcher
-                d = False
-                with open(f'{file_path}', 'r') as file_sourse:
-                    base = list(file_sourse)
-                    for i in base:
-                        if info in i:
+                try:
+                    d = False
+                    with open(f'{file_path}', 'r') as file_sourse:
+                        base = list(file_sourse)
+                        if info == 'all':
                             d = True
-                            a = i
-                            a = a.split("'")
-                            birth_day = a[5]
-                            death_day = a[7]
-                            if len(death_day) > 1:
-                                birth_year = birth_day.split('.')
-                                birth_year = birth_year[2]
-                                death_year = death_day.split('.')
-                                death_year = death_year[2]
-                                age = int(death_year) - int(birth_year)
-                                self.result.setText(self.result.text() + f'\n  ФИО Пол Дата родения Дата смерти: '
-                                                                         f'\n  {i} \n  Полные года: {age}')
-                            else:
-                                data = datetime.now()
-                                data = data.year
-                                birth_year = birth_day.split('.')
-                                birth_year = birth_year[2]
-                                age = data - int(birth_year)
-                                self.result.setText(self.result.text() + f'\n  ФИО Пол Дата родения Дата смерти: '
-                                                                         f'\n  {i} \n  Полные года: {age}')#--------------
-                if d is False:
-                    self.result.setText(f'     \n          пользователь {info} не был найден')
-            elif '.xlsx' in file_path:                                                      # .xlsx
-                book = openpyxl.open(fr'{file_path}')
-                sheet = book.active
-                for row in range(1, sheet.max_row + 1):
-                    FIO = sheet[row][0].value
-                    Birth_day = sheet[row][1].value
-                    death_day = sheet[row][2].value
-                    sex = sheet[row][3].value
-                    if info in FIO:
-                        date = datetime.now()
-                        if len(death_day) > 1:
-                            B = Birth_day.split('.')
-                            B = B[2]
-                            D = death_day.split('.')
-                            D = D[2]
-
-                            age = int(D) - int(B)
-                            self.result.setText(self.result.text() + f'  \n  ФИО Дата родения Дата смерти Пол:'
-                                                                     f'  \n  {FIO} {Birth_day} ,{death_day}, {sex}'
-                                                                     f'  \n  Полные года: {age}')
+                            for i in base:
+                                self.result.setText(self.result.text() + f'  \n  ФИО Пол Дата рождения Дата смерти:'
+                                                                         f'  \n {i}')
                         else:
-                            B = Birth_day.split('.')
-                            B = B[2]
-                            age = date.year - int(B)
+                            for i in base:
+                                if info in i:
+                                    d = True
+                                    a = i
+                                    a = a.split("'")
+                                    birth_day = a[5]
+                                    death_day = a[7]
+                                    if len(death_day) > 1:
+                                        birth_year = birth_day.split('.')
+                                        birth_year = birth_year[2]
+                                        death_year = death_day.split('.')
+                                        death_year = death_year[2]
+                                        age = int(death_year) - int(birth_year)
+                                        self.result.setText(
+                                            self.result.text() + f'\n  ФИО Пол Дата родения Дата смерти: '
+                                                                 f'\n  {i}   Полные года: {age}')
+                                    else:
+                                        data = datetime.now()
+                                        data = data.year
+                                        birth_year = birth_day.split('.')
+                                        birth_year = birth_year[2]
+                                        age = data - int(birth_year)
+                                        self.result.setText(
+                                            self.result.text() + f'\n  ФИО Пол Дата родения Дата смерти: '
+                                                                 f'\n  {i} \n  Полные года: {age}')
+                    if d is False:
+                        self.result.setText(f'     \n          пользователь {info} не был найден')
+                except FileNotFoundError:
+                    self.result.setText(f'     \n         Ошибка: файл {file_path} не найден')
+            elif '.xlsx' in file_path:# .xlsx
+                try:
+                    book = openpyxl.open(fr'{file_path}')
+                    V = False
+                    sheet = book.active
+                    if info == 'all':
+                        V = True
+                        for row in range(1, sheet.max_row + 1):
+                            FIO = sheet[row][0].value
+                            Birth_day = sheet[row][1].value
+                            death_day = sheet[row][2].value
+                            sex = sheet[row][3].value
                             self.result.setText(self.result.text() + f'  \n  ФИО Дата родения Дата смерти Пол:'
-                                                                     f'  \n  {FIO} {Birth_day} ,{death_day}, {sex}'
-                                                                     f'  \n  Полные года: {age}')
+                                                                     f'  \n  {FIO} {Birth_day} ,{death_day}, {sex}')
+                    else:
+                        for row in range(1, sheet.max_row + 1):
+                            FIO = sheet[row][0].value
+                            Birth_day = sheet[row][1].value
+                            death_day = sheet[row][2].value
+                            sex = sheet[row][3].value
+                            if info in FIO:
+                                date = datetime.now()
+                                V = True
+                                if len(death_day) > 1:
+                                    B = Birth_day.split('.')
+                                    B = B[2]
+                                    D = death_day.split('.')
+                                    D = D[2]
+
+                                    age = int(D) - int(B)
+                                    self.result.setText(self.result.text() + f'  \n  ФИО Дата родения Дата смерти Пол:'
+                                                                             f'  \n  {FIO} {Birth_day} ,{death_day}, {sex}'
+                                                                             f'  \n  Полные года: {age}')
+                                else:
+                                    B = Birth_day.split('.')
+                                    B = B[2]
+                                    age = date.year - int(B)
+                                    self.result.setText(self.result.text() + f'  \n  ФИО Дата родения Дата смерти Пол:'
+                                                                             f'  \n  {FIO} {Birth_day} ,{death_day}, {sex}'
+                                                                             f'  \n  Полные года: {age}')
+                    if V is False:
+                        self.result.setText(f'     \n          пользователь {info} не был найден')
+                except FileNotFoundError:
+                    self.result.setText(f'     \n         Ошибка: файл {file_path} не найден')
+
             else:
                 self.result.setText('     \n     Ошибка, только файлы формата txt, csv или xlsx')#--------------
         except Exception: self.result.setText('     \n    Ошибка')
